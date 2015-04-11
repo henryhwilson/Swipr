@@ -1,9 +1,3 @@
-/**
- * Welcome to Pebble.js!
- *
- * This is where you write your app.
- */
-
 var UI = require('ui');
 
 // Find the correct swipe
@@ -27,7 +21,3 @@ var main = new UI.Card({
   body:swipe,
   subtitle:'DBA: $582.30 Swipes: 3'
 });
-
-// Display the Card
-main.show();
-//hours.show();
