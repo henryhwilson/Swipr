@@ -1,9 +1,9 @@
 {
     "appKeys": {},
     "capabilities": [
-        ""
+        "configurable"
     ],
-    "companyName": "henryhwilson@gmail.com",
+    "companyName": "Golden Trees",
     "longName": "Swipr",
     "projectType": "pebblejs",
     "resources": {

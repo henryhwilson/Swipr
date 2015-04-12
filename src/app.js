@@ -18,7 +18,7 @@ if (today >= 7 && today <= 10) {
 } else if (today >= 16 && today <= 20) {
   swipe = "Dinner swipe until 9 pm";
 } else {
-  swipe = "Late Night swipe until ";
+  swipe = "Late Night swipe till ";
   if (day >= 5) 
     swipe += "2 am";
   else 
@@ -38,12 +38,15 @@ loading.add(new UI.Text({
 
 var main = new UI.Window();
 
+var dba = "$582.30";
+var swipes = "3";
+
 var dba_swipe_text = new UI.Text({
   position: new Vector2(0,0),
   size: new Vector2(144,74),
   borderColor: 'white',
   backgroudColor: 'black',
-  text: "DBA: $582.30\nSwipes: 3",
+  text: "DBA: " + dba + "\nSwipes: " + swipes,
   textOverflow: 'ellipsis',
   textAlign: 'center',
   font: 'gothic-28',
