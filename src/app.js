@@ -4,8 +4,34 @@
  * This is where you write your app.
  */
 
+
 var UI = require('ui');
 var Vector2 = require('vector2');
+var ajax = require('ajax');
+
+/*
+Placeholder DBA/Swipes if server is not online.
+*/
+var dba = "$129.63";
+var swipes = "2";
+var user = "";
+var pass = "";
+
+// Make the request
+ajax(
+  {
+    url: "http://fluidbackgammon.com/backend.php?user="+user+"&pass="+pass,
+    type: 'json'
+  },
+  function(data) {
+    // Success!
+    dba = data[0];
+    swipes = data[1];
+  },
+  function(error) {
+    // Failure!
+  }
+);
 
 var today = new Date().getHours();
 var day = new Date().getDay();
@@ -38,8 +64,8 @@ loading.add(new UI.Text({
 
 var main = new UI.Window();
 
-var dba = "$582.30";
-var swipes = "3";
+//var dba = "$582.30";
+//var swipes = "3";
 
 var dba_swipe_text = new UI.Text({
   position: new Vector2(0,0),
@@ -125,9 +151,9 @@ var menu = new UI.Menu({
 });
 
 
-loading.on('click', 'select', function(e) {
-  main.show();
-});
+// loading.on('click', 'select', function(e) {
+//   main.show();
+// });
 
 main.on('click', 'select', function(e) {
   menu.show();
@@ -137,7 +163,18 @@ menu.on('select', function(e) {
   diningCards[e.itemIndex].show();
 });
 
-loading.show();
+main.show();
 
+Pebble.addEventListener('showConfiguration', function(e) {
+  // Show config page
+  Pebble.openURL('https://equizshow.com/pebble.php');
+});
 
-
+Pebble.addEventListener('webviewclosed',
+  function(e) {
+    var configuration = JSON.parse(decodeURIComponent(e.response));
+    console.log('Configuration window returned: ', JSON.stringify(configuration));
+    user = configuration[0];
+    pass = configuration[1];
+  }
+);
