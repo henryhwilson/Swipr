@@ -11,8 +11,11 @@ var ajax = require('ajax');
 var dba = "$129.63";
 var swipes = "2";
 
-var user = "";//robert.y.sayegh.18@dartmouth.edu";
-var pass = "";//Dummy123";
+//enable to reset stores user and pass to null
+//localStorage.setItem('username', '');
+//localStorage.setItem('password', '');
+var user = localStorage.getItem('username');
+var pass = localStorage.getItem('password');
 
 var today = new Date().getHours();
 var day = new Date().getDay();
@@ -35,18 +38,18 @@ if (today >= 7 && today <= 10) {
 
 Pebble.addEventListener('showConfiguration', function(e) {
   // Show config page
-  Pebble.openURL('https://equizshow.com/pebble.php');
+  Pebble.openURL('http://fluidbackgammon.com/pebble.php');
 });
 
 Pebble.addEventListener('webviewclosed',
   function(e) {
     var configuration = JSON.parse(decodeURIComponent(e.response));
     console.log('Configuration window returned: ', JSON.stringify(configuration));
-    user = configuration[0];
-    pass = configuration[1];
+    localStorage.setItem('username', configuration.email); 
+    localStorage.setItem('password', configuration.password); 
   }
 ); 
-
+if(user && pass){ 
 var loading = new UI.Window({});
 loading.add(new UI.Text({
   position: new Vector2(0,49),
@@ -169,10 +172,23 @@ main.on('click', 'select', function(e) {
   menu.show();
 });
     main.show();
+    loading.hide();
   },
   function(error) {
     console.log(error.responseText());
     // Failure!
   }
 );
-
+}else{
+var loading = new UI.Window({});
+loading.add(new UI.Text({
+  position: new Vector2(0,0),
+  size: new Vector2(144,168),
+  text: "Enter your login credentials on your phone",
+  textAlign: 'center',
+  backgroundColor: 'white',
+  font: 'gothic-28',
+  color: 'black'
+  }));
+  loading.show();
+}
