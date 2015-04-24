@@ -139,14 +139,21 @@ ajax(
     console.log(data); // ["$134","1"];
     dba = data.split(',')[0];
     swipes = data.split(',')[1];
+    
+    var dbaText = "Invalid login";
+
+    if (data.charAt(0) == "$") {
+      dbaText = "DBA: " + dba + "\nSwipes: " + swipes;
+    }
     var main = new UI.Window();
+    
 
 var dba_swipe_text = new UI.Text({
   position: new Vector2(0,0),
   size: new Vector2(144,74),
   borderColor: 'white',
   backgroudColor: 'black',
-  text: "DBA: " + dba + "\nSwipes: " + swipes,
+  text: dbaText,
   textOverflow: 'ellipsis',
   textAlign: 'center',
   font: 'gothic-28',
