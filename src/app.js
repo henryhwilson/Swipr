@@ -11,8 +11,8 @@ var ajax = require('ajax');
 var dba = "$129.63";
 var swipes = "2";
 
-var user = "robert.y.sayegh.18@dartmouth.edu";
-var pass = "Dummy123";
+var user = "";//robert.y.sayegh.18@dartmouth.edu";
+var pass = "";//Dummy123";
 
 var today = new Date().getHours();
 var day = new Date().getDay();
@@ -57,7 +57,6 @@ loading.add(new UI.Text({
   font: 'gothic-28',
   color: 'black'
 }));
-
 
 // Sunday
 if(day === 0) {
@@ -127,15 +126,16 @@ console.log("About to check website");
 
 ajax(
   {
-    type: "post",
-    data: 'username='+user+'&password='+pass,
-    url: "http://fluidbackgammon.com/backendtest.php",
+    method: "POST",
+    data: {'username':user, 'password':pass},
+    url: "http://fluidbackgammon.com/backend.php",
   },
   function(data) {
     // Success!
     console.log("Success");
-    dba = data[0];
-    swipes = data[1];
+    console.log(data); // ["$134","1"];
+    dba = data.split(',')[0];
+    swipes = data.split(',')[1];
     var main = new UI.Window();
 
 var dba_swipe_text = new UI.Text({
@@ -171,7 +171,7 @@ main.on('click', 'select', function(e) {
     main.show();
   },
   function(error) {
-    console.log("Failure");
+    console.log(error.responseText());
     // Failure!
   }
 );
