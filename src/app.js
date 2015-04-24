@@ -6,6 +6,13 @@
 
 var UI = require('ui');
 var Vector2 = require('vector2');
+var ajax = require('ajax');
+
+var dba = "$129.63";
+var swipes = "2";
+
+var user = "robert.y.sayegh.18@dartmouth.edu";
+var pass = "Dummy123";
 
 var today = new Date().getHours();
 var day = new Date().getDay();
@@ -25,6 +32,21 @@ if (today >= 7 && today <= 10) {
     swipe += "1:30 am";
 }
 
+
+Pebble.addEventListener('showConfiguration', function(e) {
+  // Show config page
+  Pebble.openURL('https://equizshow.com/pebble.php');
+});
+
+Pebble.addEventListener('webviewclosed',
+  function(e) {
+    var configuration = JSON.parse(decodeURIComponent(e.response));
+    console.log('Configuration window returned: ', JSON.stringify(configuration));
+    user = configuration[0];
+    pass = configuration[1];
+  }
+); 
+
 var loading = new UI.Window({});
 loading.add(new UI.Text({
   position: new Vector2(0,49),
@@ -36,37 +58,6 @@ loading.add(new UI.Text({
   color: 'black'
 }));
 
-var main = new UI.Window();
-
-var dba = "$582.30";
-var swipes = "3";
-
-var dba_swipe_text = new UI.Text({
-  position: new Vector2(0,0),
-  size: new Vector2(144,74),
-  borderColor: 'white',
-  backgroudColor: 'black',
-  text: "DBA: " + dba + "\nSwipes: " + swipes,
-  textOverflow: 'ellipsis',
-  textAlign: 'center',
-  font: 'gothic-28',
-  color: 'white'
-}); 
-
-var swipe_period_text = new UI.Text({
-  position: new Vector2(0,74),
-  size: new Vector2(144,78),
-  borderColor: 'white',
-  backgroudColor: 'black',
-  text: swipe,
-  textOverflow: 'fill',
-  textAlign: 'center',
-  font: 'gothic-28',
-  color: 'white'
-});
-
-main.add(dba_swipe_text);
-main.add(swipe_period_text);
 
 // Sunday
 if(day === 0) {
@@ -124,20 +115,64 @@ var menu = new UI.Menu({
   }]
 });
 
-
-loading.on('click', 'select', function(e) {
-  main.show();
-});
-
-main.on('click', 'select', function(e) {
-  menu.show();
-});
-
 menu.on('select', function(e) {
   diningCards[e.itemIndex].show();
 });
 
 loading.show();
 
+console.log("About to check website");
 
+// Make the request
+
+ajax(
+  {
+    type: "post",
+    data: 'username='+user+'&password='+pass,
+    url: "http://fluidbackgammon.com/backendtest.php",
+  },
+  function(data) {
+    // Success!
+    console.log("Success");
+    dba = data[0];
+    swipes = data[1];
+    var main = new UI.Window();
+
+var dba_swipe_text = new UI.Text({
+  position: new Vector2(0,0),
+  size: new Vector2(144,74),
+  borderColor: 'white',
+  backgroudColor: 'black',
+  text: "DBA: " + dba + "\nSwipes: " + swipes,
+  textOverflow: 'ellipsis',
+  textAlign: 'center',
+  font: 'gothic-28',
+  color: 'white'
+}); 
+
+var swipe_period_text = new UI.Text({
+  position: new Vector2(0,74),
+  size: new Vector2(144,78),
+  borderColor: 'white',
+  backgroudColor: 'black',
+  text: swipe,
+  textOverflow: 'fill',
+  textAlign: 'center',
+  font: 'gothic-28',
+  color: 'white'
+});
+
+main.add(dba_swipe_text);
+main.add(swipe_period_text);
+    
+main.on('click', 'select', function(e) {
+  menu.show();
+});
+    main.show();
+  },
+  function(error) {
+    console.log("Failure");
+    // Failure!
+  }
+);
 
